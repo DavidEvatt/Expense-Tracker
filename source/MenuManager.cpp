@@ -1,0 +1,119 @@
+#include "MenuManager.h"
+
+MenuManager::MenuManager(bool& running, map<int, vector<Item>>& items)
+{
+    _RUNNING = &running;
+    _ITEMS = &items;
+};
+
+void MenuManager::printMenu()
+{
+    if(_RUNNING)
+    {
+        int maxChoices = 3;
+        cout << "-----------------------------\n";
+        cout << "1. Add Item\n";
+        cout << "2. View Items\n";
+        cout << "3. Exit\n";
+        cout << "-----------------------------\n";
+        cout << "Please select an option: ";
+
+        int option;
+        cin >> option;
+
+        while(option < 1 || option > maxChoices)
+        {
+            cout << _COLORMANAGER.RED << "Invalid option. Please select an option between 1 and " << maxChoices << ": " << _COLORMANAGER.DEFAULT;
+            cin >> option;
+        }
+
+        switch(option)
+        {
+            case 1:
+                addItemMenu();
+                break;
+
+            case 2:
+                _COLORMANAGER.clearScreen();
+                viewItemsMenu();
+                break;
+
+            case 3:
+                *_RUNNING = false;
+                _RUNNING = nullptr;
+                break;
+        }
+    }
+};
+
+Item MenuManager::addItemMenu()
+{
+    cout << "Lets make a new item!\n-----------------------------\n";
+    cout << "Name of item: ";
+    string name;
+    cin >> name;
+
+    cout << "Price of item: ";
+    double amount; 
+    cin >> amount;
+
+    cout << "Is this an income or expense? (1 for income, 0 for expense): ";
+    bool inc;
+    cin >> inc;
+
+    cout << "What month does this item occur? (1-12): ";
+    int month;
+    cin >> month;
+
+    while(!_VALIDATOR.checkMonths(month))
+    {
+        cout << _COLORMANAGER.RED << "Invalid month. Please enter a month between 1 and 12: " << _COLORMANAGER.DEFAULT;
+        cin >> month;
+    }
+
+    int maxDays = _VALIDATOR.getMaxDays(month);
+
+    cout << "What day does this item occur? (1- " << std::to_string(maxDays) << "): ";
+    int day;
+    cin >> day;
+
+    while(!_VALIDATOR.checkDays(day, month))
+    {
+        cout << _COLORMANAGER.RED << "Invalid day. Please enter a day between 1 and " << std::to_string(maxDays) << ": " << _COLORMANAGER.DEFAULT;
+        cin >> day;
+    }
+
+    cout << "How often does this item occur? (ONCE, DAILY, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, SEMIANNUALLY, ANNUALLY): ";
+    string occurs;
+    cin >> occurs;
+
+    while(!_VALIDATOR.checkOccurance(occurs))
+    {
+        cout << _COLORMANAGER.RED << "Invalid occurance. Please enter one of the following: ONCE, DAILY, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, SEMIANNUALLY, ANNUALLY: " << _COLORMANAGER.DEFAULT;
+        cin >> occurs;
+    }
+
+    Item newItem = Item(occurs, month, day, amount, inc, name);
+    cout << _COLORMANAGER.GREEN << "Item added!\n" << _COLORMANAGER.DEFAULT;
+    _COLORMANAGER.pauseTerminal(1);
+
+    (*_ITEMS)[month].push_back(newItem);
+    return newItem;
+};
+
+void MenuManager::viewItemsMenu()
+{
+    _COLORMANAGER.clearScreen();
+    cout << "What scale would you like to see on?\n-----------------------------\n";
+    cout << "[1] Weekly\n";
+    cout << "[2] Monthly\n";
+    cout << "[3] Three Monthly\n";
+    cout << "[4] Semi Annually\n";
+    cout << "[5] Annually\n";
+};
+
+void MenuManager::viewByWeek(int _month, int _day)
+{
+    
+};
+

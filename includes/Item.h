@@ -2,6 +2,8 @@
 #define ITEM_h
 #include <string>
     using std::string;
+#include <iostream>
+    using std::cout;
 
 class Item
 {
@@ -10,9 +12,11 @@ class Item
         double amount;
         int dayOfWeek;
         int month;
+        string itemName;
     public:
         enum OCCURANCE
         {
+            ONCE,
             DAILY,
             WEEKLY,
             BIWEEKLY,
@@ -21,49 +25,26 @@ class Item
             SEMIANNUALLY,
             ANNUALLY
         };
+    
 
-        Item(string _occurs, int _day, int _month, double _amount, bool _inc);
+        Item(string _occurs, int _month, int _day, double _amount, bool _inc, string _name);
 
         //SETTERS
+        void setOccurance(string _occurs);
+        void setAmt(double _amount, bool _inc);
+        void setDay(int _day) {dayOfWeek = _day;};
+        void setMonth(int _month) {month = _month;};
+        void setName(string _name) {itemName = _name;};
 
         //GETTERS
-        string getOccurance()
-        {
-            switch(occurs)
-            {
-                case OCCURANCE.DAILY:
-                    return "DAILY";
-                    break;
+        string getOccurance() const;
+        double getAmt() const {return amount;};
+        int getDay() const {return dayOfWeek;}; 
+        int getMonth() const {return month;};
+        string getName() const {return itemName;};
 
-                case OCCURANCE.WEEKLY:
-                    return "WEEKLY";
-                    break;
-
-                case OCCURANCE.BIWEEKLY:
-                    return "BIWEEKLY";
-                    break;
-
-                case OCCURANCE.MONTHLY:
-                    return "MONTHLY";
-                    break;
-
-                case OCCURANCE.QUARTERLY:
-                    return "QUARTERLY";
-                    break;
-
-                case OCCURANCE.SEMIANNUALLY:
-                    return "SEMIANNUALLY";
-                    break;
-
-                case OCCURANCE.ANNUALLY:
-                    return "ANNUALLY";
-                    break;
-            }
-        };
-
-        double getAmt() {return amount;};
-        int getDay() {return dayOfWeek;}; 
-        int getMonth() {return month;};
+        //Operators
+        friend std::ostream& operator<<(std::ostream& os, const Item& _item);
 };
 
 

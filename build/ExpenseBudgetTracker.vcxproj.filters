@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\source\Item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\source\MenuManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
