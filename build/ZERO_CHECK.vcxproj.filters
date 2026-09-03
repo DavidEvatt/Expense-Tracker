@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\build\CMakeFiles\5828e8e942562520f0e41a564761d70b\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{8EC7FC4B-C596-3BF4-A126-B6DD6297B1E6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

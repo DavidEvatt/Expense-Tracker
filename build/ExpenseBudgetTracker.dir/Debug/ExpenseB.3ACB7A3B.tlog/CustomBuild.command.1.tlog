@@ -1,0 +1,10 @@
+^C:\USERS\EVATT\DESKTOP\PROGRAMMING\EXPENSE  BUDGET TRACKER\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Evatt/Desktop/Programming/Expense  Budget Tracker" "-BC:/Users/Evatt/Desktop/Programming/Expense  Budget Tracker/build" --check-stamp-file "C:/Users/Evatt/Desktop/Programming/Expense  Budget Tracker/build/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

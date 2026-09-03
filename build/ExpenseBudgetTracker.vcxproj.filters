@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{609A32F7-16B1-3D8C-A2D5-1749E65C4166}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
