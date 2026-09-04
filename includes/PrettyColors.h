@@ -27,6 +27,8 @@ class PrettyColors
         string WHITE = "\033[37m";
         string DEFAULT = "\033[39m";
 
+        //There are codes for highgligting i just need to add them
+
         void static clearScreen() 
         {
             cout << "\033[2J\033[1;1H";

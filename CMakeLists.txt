@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.20)
 
 project(ExpenseBudgetTracker LANGUAGES CXX)
@@ -13,19 +12,19 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/source/*.cpp"
 )
 
-# Executable
-add_executable(ExpenseBudgetTracker
+# Executable (Changed 'Expense Tracker' to 'ExpenseTracker')
+add_executable(ExpenseTracker
     ${SOURCES}
 )
 
 # Include directory
-target_include_directories(ExpenseBudgetTracker PRIVATE
+target_include_directories(ExpenseTracker PRIVATE
     "${CMAKE_SOURCE_DIR}/includes"
 )
 
 # MSVC compiler settings
 if(MSVC)
-    target_compile_options(ExpenseBudgetTracker PRIVATE
+    target_compile_options(ExpenseTracker PRIVATE
         /W4
         /WX
         /permissive-
@@ -33,7 +32,7 @@ if(MSVC)
         /utf-8
     )
 
-    target_compile_definitions(ExpenseBudgetTracker PRIVATE
+    target_compile_definitions(ExpenseTracker PRIVATE
         UNICODE
         _UNICODE
     )

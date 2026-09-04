@@ -9,7 +9,7 @@
 
 //globals
 
-bool _RUNNING = true;
+bool _RUNNING = true; //what allows everything to run in a loop until the user exits
 map<int, vector<Item>> _ITEMS; //map of month to vector of items
 
 PrettyColors _COLORMANAGER;

@@ -1,8 +1,19 @@
 #include "Item.h"
 #include <iomanip>
 
+/**
+ * @brief Constructs an Item object with the given parameters.
+ * @param _occurs A string representation of the enum value for occurs
+ * @param _month The month the item occurs (1-12)
+ * @param _day The day the item occurs (1-31)
+ * @param _amount The amount of the item
+ * @param _inc A boolean indicating whether the amount is an income (true) or an expense (false)
+ * @example "DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY", "QUARTERLY", "SEMIANNUALLY", "ANNUALLY"
+ * @param _name The name of the item
+ */
 Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, string _name)
 {
+    //Checks if the item price/amount needs to be positive or negative
     if(_inc)
     {
         if(_amount < 0)
@@ -29,6 +40,7 @@ Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, stri
         }
     }
 
+    //When do we need to set our enum to based on _occurs
     if(_occurs == "ONCE")
     {
         occurs = ONCE;
@@ -74,9 +86,8 @@ Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, stri
     itemName = _name;
 };
 
-//setters
 /**
- * @desc Sets how often an item occurs
+ * @brief Sets how often an item occurs
  * @param _occurs A string representation of the enum value for occurs
  * @example "DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY", "QUARTERLY", "SEMIANNUALLY", "ANNUALLY"
  */
@@ -123,7 +134,7 @@ void Item::setOccurance(string _occurs)
 };
 
 /**
- * @desc Sets the amount of the item, and ensures that the amount is always positive if _inc is true, and negative if _inc is false
+ * @brief Sets the amount of the item, and ensures that the amount is always positive if _inc is true, and negative if _inc is false
  * @param _amount The amount to set the item to
  * @param _inc A boolean indicating whether the amount is an income (true) or an expense (false)
  */
@@ -156,9 +167,8 @@ void Item::setAmt(double _amount, bool _inc)
     }
 };
 
-//getters
 /**
- * @desc Returns a string representation of the enum value for occurs
+ * @brief Returns a string representation of the enum value for occurs
  * @return string representation of occurs
  */
 string Item::getOccurance() const
@@ -203,6 +213,9 @@ string Item::getOccurance() const
 };
 
 //Operators
+/**
+ * @brief Overloading the << operator to print the item in a formatted way
+ */
 std::ostream& operator<< (std::ostream& os, const Item& _item)
 {
     // |    Item Name      |      Pricing      |  Occurance  |     Date Happens     |

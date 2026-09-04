@@ -6,6 +6,9 @@ MenuManager::MenuManager(bool& running, map<int, vector<Item>>& items)
     _ITEMS = &items;
 };
 
+/**
+ * @brief Displays the main menu and handles user input for menu options.
+ */
 void MenuManager::printMenu()
 {
     if(_RUNNING)
@@ -46,6 +49,10 @@ void MenuManager::printMenu()
     }
 };
 
+/**
+ * @brief Displays the menu for adding a new item and handles user input for item details. it also adds it to the _ITEMS map.
+ * @return The newly created Item object.
+ */
 Item MenuManager::addItemMenu()
 {
     cout << "Lets make a new item!\n-----------------------------\n";
@@ -101,6 +108,9 @@ Item MenuManager::addItemMenu()
     return newItem;
 };
 
+/**
+ * @brief Shows the different sub-menus / scales for viewing items and handling user input.
+ */
 void MenuManager::viewItemsMenu()
 {
     _COLORMANAGER.clearScreen();
@@ -110,10 +120,5 @@ void MenuManager::viewItemsMenu()
     cout << "[3] Three Monthly\n";
     cout << "[4] Semi Annually\n";
     cout << "[5] Annually\n";
-};
-
-void MenuManager::viewByWeek(int _month, int _day)
-{
-    
 };
 

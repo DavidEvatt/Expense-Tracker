@@ -2,13 +2,13 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\build\x64\Release\ZERO_CHECK</FullPath>
+      <FullPath>C:\Users\Evatt\Desktop\Programming\Budget\ExpenseBudgetTracker\build\x64\Release\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\build\Release\ExpenseBudgetTracker.exe</FullPath>
+      <FullPath>C:\Users\Evatt\Desktop\Programming\Budget\ExpenseBudgetTracker\build\Release\ExpenseTracker.exe</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>C:\Users\Evatt\Desktop\Programming\Expense  Budget Tracker\build\x64\Release\ALL_BUILD</FullPath>
+      <FullPath>C:\Users\Evatt\Desktop\Programming\Budget\ExpenseBudgetTracker\build\x64\Release\ALL_BUILD</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

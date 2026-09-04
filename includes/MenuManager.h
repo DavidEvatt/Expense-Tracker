@@ -40,11 +40,12 @@ class MenuManager
                 4. View by 6 Months
                 5. View by Year
             */
+           /*
            void viewByWeek(int _month, int _day);
            void viewByMonth(int _month);
            void viewByThreeMonths(int _month);
            void viewBySixMonths(int _month);
-           void viewByYear(int _month);
+           void viewByYear(int _month);*/
 
         
 };
