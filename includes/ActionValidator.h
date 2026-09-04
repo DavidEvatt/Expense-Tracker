@@ -8,7 +8,9 @@ class ActionValidator
     private:
         
         string _OCCURANCES[8] = {"ONCE", "DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY", "QUARTERLY", "SEMIANNUALLY", "ANNUALLY"};
+        int _OCCURANCES_SIZE = 8;
         int _30DAYS[4] = {4, 6, 9, 11};
+        int _30DAYS_SIZE = 4;
 
     public:
         /**
@@ -17,9 +19,9 @@ class ActionValidator
         bool checkOccurance(string _occurs)
         {
             bool returnVal = false;
-            for(int i = 0; i < sizeof(_OCCURANCES); i++)
+            for(int i = 0; i < _OCCURANCES_SIZE; i++)
             {
-                if(_OCCURANCES[i] == _occurs)
+                if(_OCCURANCES[i] == _occurs && !returnVal)
                 {
                     returnVal = true;
                 }
@@ -61,7 +63,7 @@ class ActionValidator
             }
             else
             {
-                for(size_t i = 0; i < sizeof(_30DAYS); i++)
+                for(int i = 0; i < _30DAYS_SIZE; i++)
                 {
                     if(_month == _30DAYS[i])
                     {
@@ -93,7 +95,7 @@ class ActionValidator
             }
             else
             {
-                for(size_t i = 0; i < sizeof(_30DAYS); i++)
+                for(int i = 0; i < _30DAYS_SIZE; i++)
                 {
                     if(_month == _30DAYS[i])
                     {
@@ -104,6 +106,19 @@ class ActionValidator
 
             return maxDays;
         };
+
+        bool checkValidInput(int input, int min, int max)
+        {
+            bool returnVal = false;
+            if(input >= min && input <= max)
+            {
+                returnVal = true;
+            }
+
+            return returnVal;
+        };
+
+        
 };
 
 #endif

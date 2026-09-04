@@ -24,7 +24,7 @@ void MenuManager::printMenu()
         int option;
         cin >> option;
 
-        while(option < 1 || option > maxChoices)
+        while(!_VALIDATOR.checkValidInput(option, 1, maxChoices))
         {
             cout << _COLORMANAGER.RED << "Invalid option. Please select an option between 1 and " << maxChoices << ": " << _COLORMANAGER.DEFAULT;
             cin >> option;
@@ -65,8 +65,14 @@ Item MenuManager::addItemMenu()
     cin >> amount;
 
     cout << "Is this an income or expense? (1 for income, 0 for expense): ";
-    bool inc;
+    int inc;
     cin >> inc;
+
+    while(!_VALIDATOR.checkValidInput(inc, 0, 1))
+    {
+        cout << _COLORMANAGER.RED << "Invalid input. Please enter 1 for income or 0 for expense: " << _COLORMANAGER.DEFAULT;
+        cin >> inc;
+    }
 
     cout << "What month does this item occur? (1-12): ";
     int month;
@@ -94,8 +100,10 @@ Item MenuManager::addItemMenu()
     string occurs;
     cin >> occurs;
 
+    cout << _VALIDATOR.checkOccurance(occurs) << "\n";
     while(!_VALIDATOR.checkOccurance(occurs))
     {
+        cout << "Inside loop" + _VALIDATOR.checkOccurance(occurs) << "\n";      
         cout << _COLORMANAGER.RED << "Invalid occurance. Please enter one of the following: ONCE, DAILY, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, SEMIANNUALLY, ANNUALLY: " << _COLORMANAGER.DEFAULT;
         cin >> occurs;
     }
