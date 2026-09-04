@@ -11,7 +11,7 @@
  * @example "DAILY", "WEEKLY", "BIWEEKLY", "MONTHLY", "QUARTERLY", "SEMIANNUALLY", "ANNUALLY"
  * @param _name The name of the item
  */
-Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, string _name)
+Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, string _name, int _year)
 {
     //Checks if the item price/amount needs to be positive or negative
     if(_inc)
@@ -84,6 +84,7 @@ Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, stri
     dayOfWeek = _day;
     month = _month;
     itemName = _name;
+    year = _year;
 };
 
 /**
@@ -224,3 +225,18 @@ std::ostream& operator<< (std::ostream& os, const Item& _item)
     os << std::fixed << std::setprecision(2) << toPrint << "\n";
     return os;
 };
+
+/**
+ * @brief Overloading the < operator to compare two items based on their days
+ */
+bool operator<(const Item& lhs, const Item& rhs)
+{
+    bool returnVal = false;
+    if(lhs.getDay() < rhs.getDay())
+    {
+        returnVal = true;
+    }
+
+    return returnVal;
+}
+

@@ -14,3 +14,4 @@ CMakeLists.txt
 build/
 ExpenseBudgetTracker.exe
 ExpenseTracker.exe
+CMakeLists.txt

@@ -13,6 +13,7 @@ class Item
         int dayOfWeek;
         int month;
         string itemName;
+        int year;
     public:
         enum OCCURANCE
         {
@@ -27,7 +28,7 @@ class Item
         };
     
 
-        Item(string _occurs, int _month, int _day, double _amount, bool _inc, string _name);
+        Item(string _occurs, int _month, int _day, double _amount, bool _inc, string _name, int _year);
 
         //SETTERS
         void setOccurance(string _occurs);
@@ -42,9 +43,11 @@ class Item
         int getDay() const {return dayOfWeek;}; 
         int getMonth() const {return month;};
         string getName() const {return itemName;};
+        int getYear() const {return year;};
 
         //Operators
         friend std::ostream& operator<<(std::ostream& os, const Item& _item);
+        friend bool operator<(const Item& lhs, const Item& rhs);
 };
 
 

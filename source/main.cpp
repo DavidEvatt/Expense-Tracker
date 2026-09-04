@@ -25,6 +25,11 @@ int main()
         manager.printMenu();
     }
 
+    for(size_t i = 0; i < _ITEMS[8].size(); i++)
+    {
+        cout << _ITEMS[8].at(i) << "\n";
+    }
+
     _COLORMANAGER.clearScreen();
     cout << "Exiting program...\n";
     _COLORMANAGER.pauseTerminal(1);

@@ -1,4 +1,5 @@
 #include "MenuManager.h"
+#include <algorithm>
 
 MenuManager::MenuManager(bool& running, map<int, vector<Item>>& items)
 {
@@ -63,6 +64,7 @@ Item MenuManager::addItemMenu()
     cout << "Price of item: ";
     double amount; 
     cin >> amount;
+    //needs input validation to make sure its a string or double
 
     cout << "Is this an income or expense? (1 for income, 0 for expense): ";
     int inc;
@@ -108,11 +110,14 @@ Item MenuManager::addItemMenu()
         cin >> occurs;
     }
 
-    Item newItem = Item(occurs, month, day, amount, inc, name);
+    Item newItem = Item(occurs, month, day, amount, inc, name, year);
     cout << _COLORMANAGER.GREEN << "Item added!\n" << _COLORMANAGER.DEFAULT;
     _COLORMANAGER.pauseTerminal(1);
 
     (*_ITEMS)[month].push_back(newItem);
+    //sorts the alogroithm by days after adding it in
+    std::sort((*_ITEMS)[month].begin(), (*_ITEMS)[month].end());
+    cout << "Number of items: " << (*_ITEMS)[8].size() << "\n";
     return newItem;
 };
 

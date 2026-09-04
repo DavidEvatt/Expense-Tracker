@@ -9,6 +9,8 @@
     using std::map;
 #include <vector>
     using std::vector;
+#include <ctime>
+
 
 #include "PrettyColors.h"
 #include "Item.h"
@@ -21,11 +23,26 @@ class MenuManager
         string stringInput;
         double doubleInput;
 
+        static int getCurrentYear()
+        {
+            const std::time_t now = std::time(nullptr);
+            std::tm local_time{};
+
+            if (localtime_s(&local_time, &now) != 0)
+                return 0;
+
+            return local_time.tm_year + 1900;
+        }
+
+        int year = getCurrentYear();
+
         bool* _RUNNING;
         map<int, vector<Item>>* _ITEMS;
 
         PrettyColors _COLORMANAGER;
         ActionValidator _VALIDATOR;
+
+
 
     public:
         MenuManager(bool& running, map<int, vector<Item>>& items);
@@ -47,7 +64,7 @@ class MenuManager
            void viewBySixMonths(int _month);
            void viewByYear(int _month);*/
 
-        
+        int getYear(){return year;};
 };
 
 #endif
