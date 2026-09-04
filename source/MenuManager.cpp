@@ -169,7 +169,81 @@ void MenuManager::populateOtherItems(Item _item)
             //sorts the alogroithm by days after adding it in
             std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
         }
-        
+    }
+
+    else if(_item.getOccurance() == "WEEKLY")
+    {
+        // 52 weeks in a year
+        for(int i = 0; i < 52; i++)
+        {
+            curDay += 7;
+            int daysInMonth = _VALIDATOR.getMaxDays(curMonth);
+
+            if(curDay > daysInMonth)
+            {
+                curDay -= daysInMonth;
+                curMonth++;
+
+                if(curMonth > 12)
+                {
+                    curMonth = 1;
+                    curYear++;
+                }
+            }
+
+             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
+            //sorts the alogroithm by days after adding it in
+            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
+        }
+    }
+
+    else if(_item.getOccurance() == "BIWEEKLY")
+    {
+        // 26 bi weeks in a year
+        for(int i = 0; i < 26; i++)
+        {
+            curDay += 14;
+            int daysInMonth = _VALIDATOR.getMaxDays(curMonth);
+
+            if(curDay > daysInMonth)
+            {
+                curDay -= daysInMonth;
+                curMonth++;
+
+                if(curMonth > 12)
+                {
+                    curMonth = 1;
+                    curYear++;
+                }
+            }
+
+             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
+            //sorts the alogroithm by days after adding it in
+            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
+        }
+    }
+
+    else if(_item.getOccurance() == "MONTHLY")
+    {
+        // 12 months in a year
+        for(int i = 0; i < 12; i++)
+        {
+            curMonth++;
+
+            if(curMonth > 12)
+            {
+                curMonth = 1;
+                curYear++;
+            }
+            
+
+             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
+            //sorts the alogroithm by days after adding it in
+            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
+        }
     }
     
 }

@@ -30,6 +30,11 @@ int main()
         cout << _ITEMS[8].at(i) << "\n";
     }
 
+    for(size_t i = 0; i < _ITEMS[9].size(); i++)
+    {
+        cout << _ITEMS[9].at(i) << "\n";
+    }
+
     _COLORMANAGER.clearScreen();
     cout << "Exiting program...\n";
     _COLORMANAGER.pauseTerminal(1);

@@ -233,15 +233,12 @@ std::ostream& operator<< (std::ostream& os, const Item& _item)
  */
 bool operator<(const Item& lhs, const Item& rhs)
 {
-    bool returnVal = false;
-    if(lhs.getYear() < rhs.getYear())
-    {
-        if(lhs.getDay() < rhs.getDay())
-        {
-            returnVal = true;
-        }
-    }
+    if (lhs.getYear() != rhs.getYear())
+        return lhs.getYear() < rhs.getYear();
 
-    return returnVal;
+    if (lhs.getMonth() != rhs.getMonth())
+        return lhs.getMonth() < rhs.getMonth();
+
+    return lhs.getDay() < rhs.getDay();
 }
 
