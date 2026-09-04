@@ -48,6 +48,7 @@ class MenuManager
         MenuManager(bool& running, map<int, vector<Item>>& items);
         void printMenu();
         Item addItemMenu();
+        void populateOtherItems(Item _item);
         void viewItemsMenu();
             /*  
                 Splits into

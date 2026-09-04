@@ -85,6 +85,7 @@ Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, stri
     month = _month;
     itemName = _name;
     year = _year;
+    inc = _inc;
 };
 
 /**
@@ -221,7 +222,8 @@ std::ostream& operator<< (std::ostream& os, const Item& _item)
 {
     // |    Item Name      |      Pricing      |  Occurance  |     Date Happens     |
     string toPrint = "|\t" + _item.getName() + "\t|\t" + std::to_string(_item.getAmt()) + "\t|\t" + _item.getOccurance() 
-                           + "\t|\t" + std::to_string(_item.getMonth()) + "/" + std::to_string(_item.getDay()) + "\t|";
+                           + "\t|\t" + std::to_string(_item.getMonth()) + "/" + std::to_string(_item.getDay()) + "\t|\t" 
+                           + std::to_string(_item.getYear()) + "\t|";
     os << std::fixed << std::setprecision(2) << toPrint << "\n";
     return os;
 };
@@ -232,9 +234,12 @@ std::ostream& operator<< (std::ostream& os, const Item& _item)
 bool operator<(const Item& lhs, const Item& rhs)
 {
     bool returnVal = false;
-    if(lhs.getDay() < rhs.getDay())
+    if(lhs.getYear() < rhs.getYear())
     {
-        returnVal = true;
+        if(lhs.getDay() < rhs.getDay())
+        {
+            returnVal = true;
+        }
     }
 
     return returnVal;

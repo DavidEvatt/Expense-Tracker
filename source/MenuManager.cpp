@@ -117,6 +117,7 @@ Item MenuManager::addItemMenu()
     (*_ITEMS)[month].push_back(newItem);
     //sorts the alogroithm by days after adding it in
     std::sort((*_ITEMS)[month].begin(), (*_ITEMS)[month].end());
+    populateOtherItems(newItem);
     cout << "Number of items: " << (*_ITEMS)[8].size() << "\n";
     return newItem;
 };
@@ -135,3 +136,40 @@ void MenuManager::viewItemsMenu()
     cout << "[5] Annually\n";
 };
 
+void MenuManager::populateOtherItems(Item _item)
+{
+    int curMonth = _item.getMonth();
+    int curDay = _item.getDay();
+    int curYear = year;
+
+    if(_item.getOccurance() == "DAILY")
+    {
+        for(int i = 0; i < 365; i++)
+        {
+            curDay++;
+            //check the ammount of days in our moth
+            int daysInMonth = _VALIDATOR.getMaxDays(curMonth);
+            if(curDay > daysInMonth)
+            {
+                //if my day im on is greater than the amount of days
+                //set curDay to 1 and move to the next month
+                curDay = 1;
+                curMonth++;
+
+                if(curMonth > 12)
+                {
+                    //if we go over twelve the fo back to 1 and increase the year by 1
+                    curMonth = 1;
+                    curYear++;
+                }
+            }
+
+            Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
+            //sorts the alogroithm by days after adding it in
+            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
+        }
+        
+    }
+    
+}
