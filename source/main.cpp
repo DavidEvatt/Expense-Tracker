@@ -25,10 +25,18 @@ int main()
         manager.printMenu();
     }
 
-    for(size_t i = 0; i < _ITEMS[8].size(); i++)
+    for(int k = 1; k <= 12; k++)
     {
-        cout << _ITEMS[8].at(i) << "\n";
+        if(_ITEMS.find(k) != _ITEMS.end())
+        {
+            for(size_t i = 0; i < _ITEMS[k].size(); i++)
+            {
+                cout << _ITEMS[k].at(i) << "\n";
+            }
+        }
     }
+
+    
 
     for(size_t i = 0; i < _ITEMS[9].size(); i++)
     {

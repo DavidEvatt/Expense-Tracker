@@ -64,6 +64,15 @@ Item MenuManager::addItemMenu()
     cout << "Price of item: ";
     double amount; 
     cin >> amount;
+    
+    while(cin.fail())
+    {
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        cout << _COLORMANAGER.RED << "Invalid input. Please enter a real number: " << _COLORMANAGER.DEFAULT;
+        cin >> amount;
+    }
     //needs input validation to make sure its a string or double
 
     cout << "Is this an income or expense? (1 for income, 0 for expense): ";
@@ -245,5 +254,58 @@ void MenuManager::populateOtherItems(Item _item)
             std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
         }
     }
+    
+    else if(_item.getOccurance() == "QUARTERLY")
+    {
+        //4 quarters in a year
+        for(int i = 0; i < 4; i++)
+        {
+            curMonth += 3;
+
+            if(curMonth > 12)
+            {
+                curMonth -= 12;
+                curYear++;
+            }
+            
+
+             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
+            //sorts the alogroithm by days after adding it in
+            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
+        }
+    }
+
+    else if(_item.getOccurance() == "SEMIANNUALLY")
+    {
+        //2 Halfs in a year
+        for(int i = 0; i < 2; i++)
+        {
+            curMonth += 6;
+
+            if(curMonth > 12)
+            {
+                curMonth -= 12;
+                curYear++;
+            }
+            
+
+             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
+            //sorts the alogroithm by days after adding it in
+            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
+        }
+    }
+
+    else if(_item.getOccurance() == "ANNUALLY")
+    {
+        curYear++;
+            
+        Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+        (*_ITEMS)[newItem.getMonth()].push_back(newItem);
+        //sorts the alogroithm by days after adding it in
+        std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
+    }
+
     
 }
