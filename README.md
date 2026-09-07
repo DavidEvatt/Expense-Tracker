@@ -205,7 +205,7 @@ Some planned improvements include:
 - [ ] Monthly spending summaries
 - [ ] Budget limits
 - [ ] Balance calculations
-- [ ] Transaction categories (Color Coded)=
+- [ ] Transaction categories (Color Coded)
 - [ ] Linux support
 - [ ] Improved command-line interface
 - [ ] Export/import functionality
