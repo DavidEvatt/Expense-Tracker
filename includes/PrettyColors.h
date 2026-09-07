@@ -17,15 +17,20 @@ class PrettyColors
     public:
         PrettyColors() = default;
 
-        string BLACK = "\033[30m";
-        string RED = "\033[31m";
-        string GREEN = "\033[32m";
-        string YELLOW = "\033[33m";
-        string BLUE = "\033[34m";
+        string BLACK   = "\033[30m";
+        string RED     = "\033[31m";
+        string GREEN   = "\033[32m";
+        string YELLOW  = "\033[33m";
+        string BLUE    = "\033[34m";
         string MAGENTA = "\033[35m";
-        string CYAN = "\033[36m";
-        string WHITE = "\033[37m";
-        string DEFAULT = "\033[39m";
+        string CYAN    = "\033[36m";
+        string WHITE   = "\033[37m";
+        string DEFAULT = "\033[39m"; 
+
+        string GREEN_BKG = "\033[42m";
+        string BLUE_BKG  = "\033[44m";
+        string WHITE_BKG = "\033[47m"; 
+
 
         //There are codes for highgligting i just need to add them
 
