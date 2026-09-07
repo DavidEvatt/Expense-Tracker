@@ -1,5 +1,7 @@
 #include "MenuManager.h"
 #include <algorithm>
+#include <fstream>
+#include <cstdio>
 
 MenuManager::MenuManager(bool& running, map<int, vector<Item>>& items)
 {
@@ -14,11 +16,12 @@ void MenuManager::printMenu()
 {
     if(_RUNNING)
     {
-        int maxChoices = 3;
+        int maxChoices = 4;
         cout << "-----------------------------\n";
         cout << "1. Add Item\n";
         cout << "2. View Items\n";
-        cout << "3. Exit\n";
+        cout << "3. Delete Database\n";
+        cout << "4. Exit\n";
         cout << "-----------------------------\n";
         cout << "Please select an option: ";
 
@@ -34,18 +37,37 @@ void MenuManager::printMenu()
         switch(option)
         {
             case 1:
+            {
                 addItemMenu();
                 break;
+            }
 
             case 2:
+            {
                 _COLORMANAGER.clearScreen();
                 viewItemsMenu();
                 break;
+            }
 
             case 3:
+            {
+                std::remove("Data/myDataBase.db");
+                std::ofstream outFile("Data/myDataBase.db");
+                if(outFile.is_open())
+                {
+                    outFile.close();
+                }
+
+                _ITEMS->clear();
+                break;
+            }
+
+            case 4:
+            {
                 *_RUNNING = false;
                 _RUNNING = nullptr;
                 break;
+            }
         }
     }
 };
@@ -56,14 +78,18 @@ void MenuManager::printMenu()
  */
 Item MenuManager::addItemMenu()
 {
+    cin.clear();
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     cout << "Lets make a new item!\n-----------------------------\n";
     cout << "Name of item: ";
     string name;
-    cin >> name;
+    std::getline(cin, name);
 
     cout << "Price of item: ";
     double amount; 
     cin >> amount;
+    cin.ignore();
     
     while(cin.fail())
     {
@@ -78,6 +104,8 @@ Item MenuManager::addItemMenu()
     cout << "Is this an income or expense? (1 for income, 0 for expense): ";
     int inc;
     cin >> inc;
+    cin.ignore();
+
 
     while(!_VALIDATOR.checkValidInput(inc, 0, 1))
     {
@@ -88,6 +116,7 @@ Item MenuManager::addItemMenu()
     cout << "What month does this item occur? (1-12): ";
     int month;
     cin >> month;
+    cin.ignore();
 
     while(!_VALIDATOR.checkMonths(month))
     {
@@ -100,6 +129,7 @@ Item MenuManager::addItemMenu()
     cout << "What day does this item occur? (1- " << std::to_string(maxDays) << "): ";
     int day;
     cin >> day;
+    cin.ignore();
 
     while(!_VALIDATOR.checkDays(day, month))
     {
@@ -110,6 +140,7 @@ Item MenuManager::addItemMenu()
     cout << "How often does this item occur? (ONCE, DAILY, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, SEMIANNUALLY, ANNUALLY): ";
     string occurs;
     cin >> occurs;
+    cin.ignore();
 
     cout << _VALIDATOR.checkOccurance(occurs) << "\n";
     while(!_VALIDATOR.checkOccurance(occurs))
@@ -143,6 +174,18 @@ void MenuManager::viewItemsMenu()
     cout << "[3] Three Monthly\n";
     cout << "[4] Semi Annually\n";
     cout << "[5] Annually\n";
+
+    _COLORMANAGER.clearScreen();
+    for(int k = 1; k <= 12; k++)
+    {
+        if(_ITEMS->find(k) != _ITEMS->end())
+        {
+            for(size_t i = 0; i < (*_ITEMS)[k].size(); i++)
+            {
+                cout << (*_ITEMS)[k].at(i) << "\n";
+            }
+        }
+    }
 };
 
 void MenuManager::populateOtherItems(Item _item)
