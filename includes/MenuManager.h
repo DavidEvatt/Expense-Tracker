@@ -10,6 +10,11 @@
 #include <vector>
     using std::vector;
 #include <ctime>
+#include <algorithm>
+#include <fstream>
+#include <cstdio>
+#include <conio.h> //windows key library. also need linux
+#include <iomanip>
 
 
 #include "PrettyColors.h"
@@ -42,7 +47,15 @@ class MenuManager
         PrettyColors _COLORMANAGER;
         ActionValidator _VALIDATOR;
 
-
+        //Key Values
+        #define KEY_UP        72
+        #define KEY_DOWN      80
+        #define KEY_LEFT      75
+        #define KEY_RIGHT     77
+        #define KEY_ESCAPE    27
+        #define KEY_ENTER     13
+        #define KEY_BACKSPACE  8
+        
 
     public:
         MenuManager(bool& running, map<int, vector<Item>>& items);

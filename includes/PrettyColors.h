@@ -25,11 +25,15 @@ class PrettyColors
         string MAGENTA = "\033[35m";
         string CYAN    = "\033[36m";
         string WHITE   = "\033[37m";
-        string DEFAULT = "\033[39m"; 
+        
 
         string GREEN_BKG = "\033[42m";
         string BLUE_BKG  = "\033[44m";
         string WHITE_BKG = "\033[47m"; 
+
+        string CLEAR_TEXT = "\033[39m"; 
+        string CLEAR_BKG = "\033[49m"; 
+        string CLEAR_FORMAT = "\033[0m";
 
 
         //There are codes for highgligting i just need to add them

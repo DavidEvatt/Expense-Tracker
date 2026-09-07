@@ -1,7 +1,5 @@
 #include "MenuManager.h"
-#include <algorithm>
-#include <fstream>
-#include <cstdio>
+
 
 MenuManager::MenuManager(bool& running, map<int, vector<Item>>& items)
 {
@@ -30,7 +28,7 @@ void MenuManager::printMenu()
 
         while(!_VALIDATOR.checkValidInput(option, 1, maxChoices))
         {
-            cout << _COLORMANAGER.RED << "Invalid option. Please select an option between 1 and " << maxChoices << ": " << _COLORMANAGER.DEFAULT;
+            cout << _COLORMANAGER.RED << "Invalid option. Please select an option between 1 and " << maxChoices << ": " << _COLORMANAGER.CLEAR_FORMAT;
             cin >> option;
         }
 
@@ -96,7 +94,7 @@ Item MenuManager::addItemMenu()
         cin.clear();
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        cout << _COLORMANAGER.RED << "Invalid input. Please enter a real number: " << _COLORMANAGER.DEFAULT;
+        cout << _COLORMANAGER.RED << "Invalid input. Please enter a real number: " << _COLORMANAGER.CLEAR_FORMAT;
         cin >> amount;
     }
     //needs input validation to make sure its a string or double
@@ -109,7 +107,7 @@ Item MenuManager::addItemMenu()
 
     while(!_VALIDATOR.checkValidInput(inc, 0, 1))
     {
-        cout << _COLORMANAGER.RED << "Invalid input. Please enter 1 for income or 0 for expense: " << _COLORMANAGER.DEFAULT;
+        cout << _COLORMANAGER.RED << "Invalid input. Please enter 1 for income or 0 for expense: " << _COLORMANAGER.CLEAR_FORMAT;
         cin >> inc;
     }
 
@@ -120,7 +118,7 @@ Item MenuManager::addItemMenu()
 
     while(!_VALIDATOR.checkMonths(month))
     {
-        cout << _COLORMANAGER.RED << "Invalid month. Please enter a month between 1 and 12: " << _COLORMANAGER.DEFAULT;
+        cout << _COLORMANAGER.RED << "Invalid month. Please enter a month between 1 and 12: " << _COLORMANAGER.CLEAR_FORMAT;
         cin >> month;
     }
 
@@ -133,7 +131,7 @@ Item MenuManager::addItemMenu()
 
     while(!_VALIDATOR.checkDays(day, month))
     {
-        cout << _COLORMANAGER.RED << "Invalid day. Please enter a day between 1 and " << std::to_string(maxDays) << ": " << _COLORMANAGER.DEFAULT;
+        cout << _COLORMANAGER.RED << "Invalid day. Please enter a day between 1 and " << std::to_string(maxDays) << ": " << _COLORMANAGER.CLEAR_FORMAT;
         cin >> day;
     }
 
@@ -146,12 +144,12 @@ Item MenuManager::addItemMenu()
     while(!_VALIDATOR.checkOccurance(occurs))
     {
         cout << "Inside loop" + _VALIDATOR.checkOccurance(occurs) << "\n";      
-        cout << _COLORMANAGER.RED << "Invalid occurance. Please enter one of the following: ONCE, DAILY, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, SEMIANNUALLY, ANNUALLY: " << _COLORMANAGER.DEFAULT;
+        cout << _COLORMANAGER.RED << "Invalid occurance. Please enter one of the following: ONCE, DAILY, WEEKLY, BIWEEKLY, MONTHLY, QUARTERLY, SEMIANNUALLY, ANNUALLY: " << _COLORMANAGER.CLEAR_FORMAT;
         cin >> occurs;
     }
 
     Item newItem = Item(occurs, month, day, amount, inc, name, year);
-    cout << _COLORMANAGER.GREEN << "Item added!\n" << _COLORMANAGER.DEFAULT;
+    cout << _COLORMANAGER.GREEN << "Item added!\n" << _COLORMANAGER.CLEAR_FORMAT;
     _COLORMANAGER.pauseTerminal(1);
 
     (*_ITEMS)[month].push_back(newItem);
@@ -167,15 +165,94 @@ Item MenuManager::addItemMenu()
  */
 void MenuManager::viewItemsMenu()
 {
-    _COLORMANAGER.clearScreen();
-    cout << "What scale would you like to see on?\n-----------------------------\n";
-    cout << "[1] Weekly\n";
-    cout << "[2] Monthly\n";
-    cout << "[3] Three Monthly\n";
-    cout << "[4] Semi Annually\n";
-    cout << "[5] Annually\n";
+    cout << std::left;
 
+    bool here = true;
     _COLORMANAGER.clearScreen();
+    string ary[5] = {"Weekly", "Monthly", "Quarterly", "Semi-Annual", "Yearly"};
+    int optionIndex = 0;
+    int spacing = 12;
+    while(here)
+    {
+        cout << "What scale would you like to see on?\n(Esc to return to main menu)\n-----------------------------\n";
+        
+        for(int i = 0; i < 5; i++)
+        {
+            // Calculate how many regular trailing spaces this word needs to hit 15 chars
+            int spacesNeeded = spacing - ary[i].length();
+            string padding(spacesNeeded, ' ');
+
+            if(optionIndex == i)
+            {
+                cout << _COLORMANAGER.BLUE_BKG << ary[i] << _COLORMANAGER.CLEAR_FORMAT << padding;
+            }
+            else
+            {
+                // Normal text followed by regular padding spaces
+                cout << ary[i] << padding;
+            }
+        }
+
+        int ch = _getch(); //first key press
+
+        //is it a special character
+        if(ch == 0 || ch == 224)
+        {
+            //grab keycode
+            ch = _getch();
+
+            switch(ch)
+            {
+                case KEY_RIGHT:
+                {
+                    if(optionIndex < 4)
+                    {
+                        optionIndex++;
+                    }
+                    
+                    break;
+                }
+
+                case KEY_LEFT:
+                {
+                    if(optionIndex > 0)
+                    {
+                        optionIndex--;
+                    }
+                    break;
+                }
+
+                case KEY_UP:
+                {
+                    spacing++;
+                    break;
+                }
+
+                case KEY_DOWN:
+                {
+                    spacing--;
+                    break;
+                }
+            }
+        } 
+
+        //check for enter key. use the optionIndex to load the proper view
+        else if (ch == '\n' || ch == '\r' || ch == KEY_ENTER) {
+            std::cout << "Enter detected every time!\n";
+            break;
+        }
+
+        //check for backspace or esc
+        else if(ch == KEY_BACKSPACE || ch == KEY_ESCAPE || ch == '\b')
+        {
+            here = false;
+        }
+
+        _COLORMANAGER.clearScreen();
+    }
+
+
+    /*
     for(int k = 1; k <= 12; k++)
     {
         if(_ITEMS->find(k) != _ITEMS->end())
@@ -185,7 +262,7 @@ void MenuManager::viewItemsMenu()
                 cout << (*_ITEMS)[k].at(i) << "\n";
             }
         }
-    }
+    }*/
 };
 
 void MenuManager::populateOtherItems(Item _item)

@@ -7,6 +7,7 @@
     using std::map;
 #include <algorithm>
 #include <string>
+#include <iomanip>
 
 #include "MenuManager.h"
 #include "sqlite3.h"
@@ -24,7 +25,8 @@ void saveToSQLDataBase();
 
 int main()
 {
-    
+    cout << std::fixed << std::setprecision(2);
+
     //Attempt to open data base
     int exit = sqlite3_open("Data/myDataBase.db", &db);
 
