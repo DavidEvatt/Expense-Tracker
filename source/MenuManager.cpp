@@ -25,9 +25,12 @@ void MenuManager::printMenu()
 
         int option;
         cin >> option;
-
-        while(!_VALIDATOR.checkValidInput(option, 1, maxChoices))
+    
+        while(cin.fail() || !_VALIDATOR.checkValidInput(option, 1, maxChoices))
         {
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
             cout << _COLORMANAGER.RED << "Invalid option. Please select an option between 1 and " << maxChoices << ": " << _COLORMANAGER.CLEAR_FORMAT;
             cin >> option;
         }
@@ -97,7 +100,6 @@ Item MenuManager::addItemMenu()
         cout << _COLORMANAGER.RED << "Invalid input. Please enter a real number: " << _COLORMANAGER.CLEAR_FORMAT;
         cin >> amount;
     }
-    //needs input validation to make sure its a string or double
 
     cout << "Is this an income or expense? (1 for income, 0 for expense): ";
     int inc;
@@ -169,17 +171,17 @@ void MenuManager::viewItemsMenu()
 
     bool here = true;
     _COLORMANAGER.clearScreen();
-    string ary[5] = {"Weekly", "Monthly", "Quarterly", "Semi-Annual", "Yearly"};
+    string ary[4] = {"One", "Three", "Six", "Twelve"};
     int optionIndex = 0;
-    int spacing = 12;
+    int spacing = 10;
     while(here)
     {
-        cout << "What scale would you like to see on?\n(Esc to return to main menu)\n-----------------------------\n";
+        cout << "How many months would you like to see?\n(Esc to return to main menu)\n-----------------------------\n";
         
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 4; i++)
         {
             // Calculate how many regular trailing spaces this word needs to hit 15 chars
-            int spacesNeeded = spacing - ary[i].length();
+            size_t spacesNeeded = spacing - ary[i].length();
             string padding(spacesNeeded, ' ');
 
             if(optionIndex == i)
@@ -221,18 +223,6 @@ void MenuManager::viewItemsMenu()
                     }
                     break;
                 }
-
-                case KEY_UP:
-                {
-                    spacing++;
-                    break;
-                }
-
-                case KEY_DOWN:
-                {
-                    spacing--;
-                    break;
-                }
             }
         } 
 
@@ -264,6 +254,7 @@ void MenuManager::viewItemsMenu()
         }
     }*/
 };
+
 
 void MenuManager::populateOtherItems(Item _item)
 {

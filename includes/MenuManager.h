@@ -55,7 +55,6 @@ class MenuManager
         #define KEY_ESCAPE    27
         #define KEY_ENTER     13
         #define KEY_BACKSPACE  8
-        
 
     public:
         MenuManager(bool& running, map<int, vector<Item>>& items);
@@ -63,13 +62,16 @@ class MenuManager
         Item addItemMenu();
         void populateOtherItems(Item _item);
         void viewItemsMenu();
+        void monthyView(int sad);
             /*  
                 Splits into
-                1. View by Week
-                2. View by Month
-                3. View by 3 Months
+                1. View by 1 Month
+                2. View by 3 Month
                 4. View by 6 Months
                 5. View by Year
+
+                each view should be seen by weeks and from their you can
+                press enter on a week to open it into a daily view.
             */
            /*
            void viewByWeek(int _month, int _day);

@@ -29,7 +29,7 @@ Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, stri
 
     else
     {
-        if(amount > 0)
+        if(_amount > 0)
         {
             amount = _amount * -1;
         }
