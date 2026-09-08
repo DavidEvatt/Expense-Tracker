@@ -71,6 +71,7 @@ int main()
         std::ofstream outFile(statusPath);
         if (outFile.is_open())
         {
+            outFile << "{}";
             outFile.close();
         }
     }
@@ -89,6 +90,7 @@ int main()
     {
         //either file was not created or there was no data in the file
         firstTimeUser();
+        saveUser();
     }
 
     if(login())
