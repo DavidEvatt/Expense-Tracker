@@ -46,7 +46,7 @@ void MenuManager::printMenu()
             case 2:
             {
                 _COLORMANAGER.clearScreen();
-                viewItemsMenu();
+                selectViewMonths();
                 break;
             }
 
@@ -165,7 +165,7 @@ Item MenuManager::addItemMenu()
 /**
  * @brief Shows the different sub-menus / scales for viewing items and handling user input.
  */
-void MenuManager::viewItemsMenu()
+void MenuManager::selectViewMonths()
 {
     cout << std::left;
 
@@ -227,8 +227,29 @@ void MenuManager::viewItemsMenu()
         } 
 
         //check for enter key. use the optionIndex to load the proper view
-        else if (ch == '\n' || ch == '\r' || ch == KEY_ENTER) {
-            std::cout << "Enter detected every time!\n";
+        else if (ch == '\n' || ch == '\r' || ch == KEY_ENTER) 
+        {
+            if(ary[optionIndex] == "One")
+            {
+                monthyView(1);
+            }  
+            
+            else if(ary[optionIndex] == "Three")
+            {
+                monthyView(3);
+            }  
+
+            else if(ary[optionIndex] == "Six")
+            {
+                monthyView(6);
+            }  
+
+            else if(ary[optionIndex] == "Twelve")
+            {
+                monthyView(12);
+            }  
+
+            here = false;
             break;
         }
 
@@ -254,6 +275,136 @@ void MenuManager::viewItemsMenu()
         }
     }*/
 };
+
+void MenuManager::monthyView(int _months)
+{
+    int monthIn = getCurrentMonth();
+    cout << std::left;
+
+    vector<int> dates;
+
+    bool here = true;
+    _COLORMANAGER.clearScreen();
+    int optionIndex = 0;
+    int spacing = 10;
+
+    for(int i = 0; i < _months; i++)
+    {
+        dates.push_back(1);
+        dates.push_back(8);
+        dates.push_back(15);
+        dates.push_back(22);
+    }
+
+    while(here)
+    {
+        cout << "Hover over a week to see purchases?\n(Esc to return to main menu)\n-----------------------------\n";
+        
+        //printing out your week options
+        for(size_t i = 0; i < dates.size(); i++)
+        {
+            // Calculate how many regular trailing spaces this word needs to hit 15 chars
+            size_t spacesNeeded = spacing - 4;
+            string padding(spacesNeeded, ' ');
+
+
+            if(optionIndex == i)
+            {
+                cout << _COLORMANAGER.BLUE_BKG << std::to_string(monthIn) << "/" << std::to_string(dates.at(i)) << _COLORMANAGER.CLEAR_FORMAT << padding;
+            }
+            else
+            {
+                // Normal text followed by regular padding spaces
+                cout << std::to_string(monthIn) << "/" << std::to_string(dates.at(i)) << padding;
+            }
+
+            if(i % 4 == 0 && i != 0)
+            {
+                monthIn++;
+                if(monthIn > 12){monthIn = 1;}
+            }
+
+            if(i % 12 == 0 && i != 0)
+            {
+                cout << "\n";
+            }
+        }
+
+        monthIn = getCurrentMonth();
+        
+
+        //print out the events
+        for(int k = 0; k < _months; k++)
+        {
+            for(size_t i = 0; i < (*_ITEMS)[monthIn + k].size(); i++)
+            {
+                if(dates.at(optionIndex) == 22 && optionIndex != dates.size() -1)
+                {
+                    //grab until the end of the month
+                    if((*_ITEMS)[monthIn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthIn].at(i).getDay() < _VALIDATOR.getMaxDays(monthIn))
+                    {
+                        cout << "\n" << (*_ITEMS)[monthIn + k].at(i);
+                    }
+                }
+
+                else
+                {
+                    //grab a normal week
+                    if((*_ITEMS)[monthIn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthIn].at(i).getDay() < dates.at(optionIndex + 1))
+                    {
+                        cout << "\n" << (*_ITEMS)[monthIn + k].at(i);
+                    }
+                }
+            }
+        }
+
+        int ch = _getch(); //first key press
+
+        //is it a special character
+        if(ch == 0 || ch == 224)
+        {
+            //grab keycode
+            ch = _getch();
+
+            switch(ch)
+            {
+                case KEY_RIGHT:
+                {
+                    if(optionIndex < dates.size() -1)
+                    {
+                        optionIndex++;
+                    }
+                    
+                    break;
+                }
+
+                case KEY_LEFT:
+                {
+                    if(optionIndex > 0)
+                    {
+                        optionIndex--;
+                    }
+                    break;
+                }
+            }
+        } 
+
+        //check for enter key. use the optionIndex to load the proper view
+        else if (ch == '\n' || ch == '\r' || ch == KEY_ENTER) {
+            std::cout << "Enter detected every time!\n";
+            break;
+        }
+
+        //check for backspace or esc
+        else if(ch == KEY_BACKSPACE || ch == KEY_ESCAPE || ch == '\b')
+        {
+            here = false;
+        }
+
+        _COLORMANAGER.clearScreen();
+    }
+
+}
 
 
 void MenuManager::populateOtherItems(Item _item)
@@ -419,4 +570,4 @@ void MenuManager::populateOtherItems(Item _item)
     }
 
     
-}
+};

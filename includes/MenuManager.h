@@ -27,18 +27,6 @@ class MenuManager
         int intInput;
         string stringInput;
         double doubleInput;
-
-        static int getCurrentYear()
-        {
-            const std::time_t now = std::time(nullptr);
-            std::tm local_time{};
-
-            if (localtime_s(&local_time, &now) != 0)
-                return 0;
-
-            return local_time.tm_year + 1900;
-        }
-
         int year = getCurrentYear();
 
         bool* _RUNNING;
@@ -61,8 +49,8 @@ class MenuManager
         void printMenu();
         Item addItemMenu();
         void populateOtherItems(Item _item);
-        void viewItemsMenu();
-        void monthyView(int sad);
+        void selectViewMonths();
+        void monthyView(int _months);
             /*  
                 Splits into
                 1. View by 1 Month
@@ -81,6 +69,39 @@ class MenuManager
            void viewByYear(int _month);*/
 
         int getYear(){return year;};
+
+        static int getCurrentYear()
+        {
+            const std::time_t now = std::time(nullptr);
+            std::tm local_time{};
+
+            if (localtime_s(&local_time, &now) != 0)
+                return 0;
+
+            return local_time.tm_year + 1900;
+        };
+
+        static int getCurrentMonth()
+        {
+            const std::time_t now = std::time(nullptr);
+            std::tm local_time{};
+
+            if (localtime_s(&local_time, &now) != 0)
+                return 0;
+
+            return local_time.tm_mon;
+        }
+
+        static int getCurrentDay()
+        {
+            const std::time_t now = std::time(nullptr);
+            std::tm local_time{};
+
+            if (localtime_s(&local_time, &now) != 0)
+                return 0;
+
+            return local_time.tm_mday;
+        }
 };
 
 #endif

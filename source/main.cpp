@@ -453,7 +453,7 @@ static int getCurrentMonth()
     if (localtime_s(&local_time, &now) != 0)
         return 0;
 
-    return local_time.tm_mon;
+    return local_time.tm_mon + 1;
 }
 
 static int getCurrentDay()

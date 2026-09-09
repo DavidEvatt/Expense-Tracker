@@ -1,3 +1,9 @@
 {
- 
+   "dayCreated": 8,
+   "monthCreated": 8,
+   "yearCreated": 2026,
+   "timesOpened": 7,
+   "username": "Jimbo",
+   "password": "abcd",
+   "securityAnswer": "abcd"
 }
