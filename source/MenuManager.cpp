@@ -279,6 +279,8 @@ void MenuManager::selectViewMonths()
 void MenuManager::monthyView(int _months)
 {
     int monthIn = getCurrentMonth();
+    cout << "MONTH IS " << std::to_string(monthIn);
+
     cout << std::left;
 
     vector<int> dates;
@@ -287,6 +289,8 @@ void MenuManager::monthyView(int _months)
     _COLORMANAGER.clearScreen();
     int optionIndex = 0;
     int spacing = 10;
+
+    int monthOn = 0;
 
     for(int i = 0; i < _months; i++)
     {
@@ -311,6 +315,7 @@ void MenuManager::monthyView(int _months)
             if(optionIndex == i)
             {
                 cout << _COLORMANAGER.BLUE_BKG << std::to_string(monthIn) << "/" << std::to_string(dates.at(i)) << _COLORMANAGER.CLEAR_FORMAT << padding;
+                if(monthOn != monthIn){monthOn = monthIn;}
             }
             else
             {
@@ -318,10 +323,10 @@ void MenuManager::monthyView(int _months)
                 cout << std::to_string(monthIn) << "/" << std::to_string(dates.at(i)) << padding;
             }
 
-            if(i % 4 == 0 && i != 0)
+            if(dates.at(i) == 22)
             {
                 monthIn++;
-                if(monthIn > 12){monthIn = 1;}
+                if(monthIn >= 12){monthIn = 1;}
             }
 
             if(i % 12 == 0 && i != 0)
@@ -329,34 +334,35 @@ void MenuManager::monthyView(int _months)
                 cout << "\n";
             }
         }
-
-        monthIn = getCurrentMonth();
         
+        monthIn = getCurrentMonth();
 
         //print out the events
-        for(int k = 0; k < _months; k++)
+       
+        for(size_t i = 0; i < (*_ITEMS)[monthOn].size(); i++)
         {
-            for(size_t i = 0; i < (*_ITEMS)[monthIn + k].size(); i++)
+            if((*_ITEMS)[monthOn].at(i).getMonth() == monthOn)
             {
-                if(dates.at(optionIndex) == 22 && optionIndex != dates.size() -1)
+                if(dates.at(optionIndex) == 22 || optionIndex == dates.size() -1)
                 {
                     //grab until the end of the month
-                    if((*_ITEMS)[monthIn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthIn].at(i).getDay() < _VALIDATOR.getMaxDays(monthIn))
+                    if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < _VALIDATOR.getMaxDays(monthOn))
                     {
-                        cout << "\n" << (*_ITEMS)[monthIn + k].at(i);
+                        cout << "\n" << (*_ITEMS)[monthOn].at(i);
                     }
                 }
 
                 else
                 {
                     //grab a normal week
-                    if((*_ITEMS)[monthIn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthIn].at(i).getDay() < dates.at(optionIndex + 1))
+                    if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < dates.at(optionIndex + 1))
                     {
-                        cout << "\n" << (*_ITEMS)[monthIn + k].at(i);
+                        cout << "\n" << (*_ITEMS)[monthOn].at(i);
                     }
                 }
             }
         }
+        
 
         int ch = _getch(); //first key press
 
