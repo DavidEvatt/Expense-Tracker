@@ -16,3 +16,4 @@ ExpenseBudgetTracker.exe
 ExpenseTracker.exe
 CMakeLists.txt
 Data/myDataBase.db
+Data/status.json
