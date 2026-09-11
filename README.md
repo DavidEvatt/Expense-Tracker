@@ -24,7 +24,6 @@ The goal of this project is to provide a simple, lightweight way to record incom
 - **C++17**
 - **SQLite3**
 - **CMake 3.20+**
-- **MSVC / Visual Studio**
 
 ## Project Structure
 
@@ -62,8 +61,6 @@ The application is separated into several components:
 
 ## Data Storage
 
-The application uses **SQLite** rather than storing financial information in a JSON file.
-
 Each transaction contains information including:
 
 | Field | Description |
@@ -88,7 +85,6 @@ Before building the project, make sure you have:
 
 - [CMake](https://cmake.org/)
 - A C++17-compatible compiler
-- Visual Studio / MSVC on Windows
 
 ### Clone the Repository
 
