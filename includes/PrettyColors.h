@@ -41,6 +41,7 @@ class PrettyColors
         void static clearScreen() 
         {
             cout << "\033[2J\033[1;1H";
+            //ansi code for clear display and reset mouse position
             cout.flush(); // Ensure the output is immediately sent to the terminal
         };
 

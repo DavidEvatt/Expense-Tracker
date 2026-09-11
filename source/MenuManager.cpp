@@ -342,9 +342,8 @@ void MenuManager::monthyView(int _months)
         
         monthIn = getCurrentMonth();
 
-        //print out the events
-       
         addedItemNum = 0;
+        //grabs all of the valid events for the time frame selected
         for(size_t i = 0; i < (*_ITEMS)[monthOn].size(); i++)
         {
             if((*_ITEMS)[monthOn].at(i).getMonth() == monthOn)
@@ -354,58 +353,28 @@ void MenuManager::monthyView(int _months)
                 //grab until the end of the month
                     if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < _VALIDATOR.getMaxDays(monthOn))
                     {
-                        if(itemIndex == i)
-                        {
-                            cout << "\n" << _COLORMANAGER.BLUE_BKG << (*_ITEMS)[monthOn].at(i) << _COLORMANAGER.CLEAR_FORMAT;
-                        }
-
-                        else
-                        {
-                            cout << "\n" << (*_ITEMS)[monthOn].at(i);
-                        }
-                        
-                        if(listOfWeek.size() > addedItemNum)
-                        {
-                            listOfWeek.at(addedItemNum) = (*_ITEMS)[monthOn].at(i);
-                            cout << _COLORMANAGER.MAGENTA << listOfWeek.at(addedItemNum).getName() << " Added at index " << std::to_string(addedItemNum)
-                                << _COLORMANAGER.CLEAR_FORMAT << "\n";
-                            addedItemNum++;
-                        }
-
-                        else
-                        {
-                            listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
-                        }
-                        
+                        listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
                     }
                 }
 
                 else if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < dates.at(optionIndex + 1))
                 {
-                    if(itemIndex == i)
-                    {
-                        cout << "\n" << _COLORMANAGER.BLUE_BKG << (*_ITEMS)[monthOn].at(i) << _COLORMANAGER.CLEAR_FORMAT;
-                    }
-
-                    else
-                    {
-                        cout << "\n" << (*_ITEMS)[monthOn].at(i);
-                    }
-
-                   
-                    if(listOfWeek.size() > addedItemNum)
-                    {
-                        listOfWeek.at(addedItemNum) = (*_ITEMS)[monthOn].at(i);
-                        cout << _COLORMANAGER.MAGENTA << listOfWeek.at(addedItemNum).getName() << " Added at index " << std::to_string(addedItemNum)
-                            << _COLORMANAGER.CLEAR_FORMAT << "\n";
-                        addedItemNum++;
-                    }
-
-                    else
-                    {
-                        listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
-                    }
+                    listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
                 }
+            }
+        }
+
+        //print all of the events out
+        for(size_t i = 0; i < listOfWeek.size(); i++)
+        {
+            if(itemIndex == i)
+            {
+                cout << "\n" << _COLORMANAGER.BLUE_BKG << listOfWeek.at(i) << _COLORMANAGER.CLEAR_FORMAT;
+            }
+
+            else
+            {
+                cout << "\n" << listOfWeek.at(i);
             }
         }
 
