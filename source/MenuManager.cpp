@@ -288,9 +288,13 @@ void MenuManager::monthyView(int _months)
     bool here = true;
     _COLORMANAGER.clearScreen();
     int optionIndex = 0;
+    int itemIndex = 0;
     int spacing = 10;
 
     int monthOn = 0;
+    int addedItemNum = 0;
+
+    vector<Item> listOfWeek;
 
     for(int i = 0; i < _months; i++)
     {
@@ -317,6 +321,7 @@ void MenuManager::monthyView(int _months)
                 cout << _COLORMANAGER.BLUE_BKG << std::to_string(monthIn) << "/" << std::to_string(dates.at(i)) << _COLORMANAGER.CLEAR_FORMAT << padding;
                 if(monthOn != monthIn){monthOn = monthIn;}
             }
+
             else
             {
                 // Normal text followed by regular padding spaces
@@ -339,39 +344,78 @@ void MenuManager::monthyView(int _months)
 
         //print out the events
        
+        addedItemNum = 0;
         for(size_t i = 0; i < (*_ITEMS)[monthOn].size(); i++)
         {
             if((*_ITEMS)[monthOn].at(i).getMonth() == monthOn)
             {
                 if(dates.at(optionIndex) == 22 || optionIndex == dates.size() -1)
                 {
-                    //grab until the end of the month
+                //grab until the end of the month
                     if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < _VALIDATOR.getMaxDays(monthOn))
                     {
-                        cout << "\n" << (*_ITEMS)[monthOn].at(i);
+                        if(itemIndex == i)
+                        {
+                            cout << "\n" << _COLORMANAGER.BLUE_BKG << (*_ITEMS)[monthOn].at(i) << _COLORMANAGER.CLEAR_FORMAT;
+                        }
+
+                        else
+                        {
+                            cout << "\n" << (*_ITEMS)[monthOn].at(i);
+                        }
+                        
+                        if(listOfWeek.size() > addedItemNum)
+                        {
+                            listOfWeek.at(addedItemNum) = (*_ITEMS)[monthOn].at(i);
+                            cout << _COLORMANAGER.MAGENTA << listOfWeek.at(addedItemNum).getName() << " Added at index " << std::to_string(addedItemNum)
+                                << _COLORMANAGER.CLEAR_FORMAT << "\n";
+                            addedItemNum++;
+                        }
+
+                        else
+                        {
+                            listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
+                        }
+                        
                     }
                 }
 
-                else
+                else if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < dates.at(optionIndex + 1))
                 {
-                    //grab a normal week
-                    if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < dates.at(optionIndex + 1))
+                    if(itemIndex == i)
+                    {
+                        cout << "\n" << _COLORMANAGER.BLUE_BKG << (*_ITEMS)[monthOn].at(i) << _COLORMANAGER.CLEAR_FORMAT;
+                    }
+
+                    else
                     {
                         cout << "\n" << (*_ITEMS)[monthOn].at(i);
+                    }
+
+                   
+                    if(listOfWeek.size() > addedItemNum)
+                    {
+                        listOfWeek.at(addedItemNum) = (*_ITEMS)[monthOn].at(i);
+                        cout << _COLORMANAGER.MAGENTA << listOfWeek.at(addedItemNum).getName() << " Added at index " << std::to_string(addedItemNum)
+                            << _COLORMANAGER.CLEAR_FORMAT << "\n";
+                        addedItemNum++;
+                    }
+
+                    else
+                    {
+                        listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
                     }
                 }
             }
         }
-        
 
         int ch = _getch(); //first key press
-
+        
         //is it a special character
         if(ch == 0 || ch == 224)
         {
             //grab keycode
             ch = _getch();
-
             switch(ch)
             {
                 case KEY_RIGHT:
@@ -379,6 +423,8 @@ void MenuManager::monthyView(int _months)
                     if(optionIndex < dates.size() -1)
                     {
                         optionIndex++;
+                        itemIndex = 0;
+                        listOfWeek.clear();
                     }
                     
                     break;
@@ -389,7 +435,36 @@ void MenuManager::monthyView(int _months)
                     if(optionIndex > 0)
                     {
                         optionIndex--;
+                        itemIndex = 0;
+                        listOfWeek.clear();
+
                     }
+                    break;
+                }
+
+                case KEY_UP:
+                {
+                    cout << _COLORMANAGER.MAGENTA << "Key Up Pressed | ItemIndex is | " << std::to_string(itemIndex) 
+                         <<  " | Size of list is " << std::to_string(listOfWeek.size()) << _COLORMANAGER.CLEAR_FORMAT << "\n";
+                    if(itemIndex > 0)
+                    {
+                        itemIndex--;
+                        cout << _COLORMANAGER.MAGENTA << "ItemIndex is should update | " << std::to_string(itemIndex) << _COLORMANAGER.CLEAR_FORMAT << "\n";
+                    }
+                    break;
+                }
+
+                case KEY_DOWN:
+                {
+                    cout << _COLORMANAGER.MAGENTA << "Key Down Pressed | ItemIndex is | " << std::to_string(itemIndex) 
+                         <<  " | Size of list is " << std::to_string(listOfWeek.size()) << _COLORMANAGER.CLEAR_FORMAT << "\n";
+                    if(itemIndex < listOfWeek.size() -1)
+                    {
+                        itemIndex++;
+                        cout << _COLORMANAGER.MAGENTA << "ItemIndex is should update | " << std::to_string(itemIndex) << _COLORMANAGER.CLEAR_FORMAT << "\n";
+                    }
+
+
                     break;
                 }
             }
@@ -408,6 +483,8 @@ void MenuManager::monthyView(int _months)
         }
 
         _COLORMANAGER.clearScreen();
+        listOfWeek.clear();
+        addedItemNum = 0;
     }
 
 }
