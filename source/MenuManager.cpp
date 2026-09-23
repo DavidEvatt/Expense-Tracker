@@ -1,10 +1,9 @@
 #include "MenuManager.h"
 
 
-MenuManager::MenuManager(bool& running, map<int, vector<Item>>& items)
+MenuManager::MenuManager(bool& running)
 {
     _RUNNING = &running;
-    _ITEMS = &items;
 
     //Attempt to open data base
     int exit = sqlite3_open("Data/myDataBase.db", &_DB);
@@ -67,8 +66,6 @@ void MenuManager::printMenu()
                 {
                     outFile.close();
                 }
-
-                _ITEMS->clear();
 
                 //Create Table if it doesnt exist
                 char* errMsg = nullptr;
@@ -371,26 +368,54 @@ void MenuManager::monthyView(int _months)
         monthIn = getCurrentMonth();
 
         addedItemNum = 0;
-        //grabs all of the valid events for the time frame selected
-        for(size_t i = 0; i < (*_ITEMS)[monthOn].size(); i++)
-        {
-            if((*_ITEMS)[monthOn].at(i).getMonth() == monthOn)
-            {
-                if(dates.at(optionIndex) == 22 || optionIndex == dates.size() -1)
-                {
-                //grab until the end of the month
-                    if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < _VALIDATOR.getMaxDays(monthOn))
-                    {
-                        listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
-                    }
-                }
+    //ADDING ITEMS from data base
+        // 1. The act i want to perforn
+        const char* sql = "SELECT occurs, month, day, amount, inc, name, year "
+                        "FROM items "
+                        "WHERE month = ? AND day BETWEEN ? AND ?;";
+        sqlite3_stmt* stmt;
 
-                else if((*_ITEMS)[monthOn].at(i).getDay() >= dates.at(optionIndex) && (*_ITEMS)[monthOn].at(i).getDay() < dates.at(optionIndex + 1))
-                {
-                    listOfWeek.push_back((*_ITEMS)[monthOn].at(i));
-                }
-            }
+        if (sqlite3_prepare_v2(_DB, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+            std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(_DB) << std::endl;
+            //clean nenory and stio running
         }
+
+        // 2. Bind the 3 variables to the '?' placeholders (1-indexed)
+        sqlite3_bind_int(stmt, 1, monthOn); // First ?: month
+        //grab days variable
+        int startDay = 0;
+        int endDay = 0;
+        
+        if(dates.at(optionIndex) == 22 || optionIndex == dates.size() -1)
+        {
+            startDay = dates.at(optionIndex);
+            endDay = _VALIDATOR.getMaxDays(monthOn);
+        }
+
+        else
+        {
+            startDay = dates.at(optionIndex);
+            endDay = dates.at(optionIndex + 1) -1;
+        }
+        
+        sqlite3_bind_int(stmt, 2, startDay);    // Second ?: start of day range (e.g., 7)
+        sqlite3_bind_int(stmt, 3, endDay);      // Third ?: end of day range (e.g., 14)
+
+        // 3. Step through the results row by row
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            std::string occurs = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+            int month          = sqlite3_column_int(stmt, 1);
+            int day            = sqlite3_column_int(stmt, 2);
+            double amount      = sqlite3_column_double(stmt, 3);
+            bool inc           = sqlite3_column_int(stmt, 4) != 0;
+            std::string name   = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5));
+            int _year           = sqlite3_column_int(stmt, 6);
+
+            listOfWeek.emplace_back(occurs, month, day, amount, inc, name, _year);
+        }
+
+        sqlite3_finalize(stmt);
+    //END SECTION
 
         //print all of the events out
         for(size_t i = 0; i < listOfWeek.size(); i++)
@@ -486,7 +511,9 @@ void MenuManager::monthyView(int _months)
 
 }
 
-
+/**
+ * @brief uses the items occurance to automatically populate the sqldata base with duplicates of itself with different days / months / years
+ */
 void MenuManager::populateOtherItems(Item _item)
 {
     int numInstances = 0; //the number of instances we want to create

@@ -33,7 +33,6 @@ class MenuManager
         int year = getCurrentYear();
 
         bool* _RUNNING;
-        map<int, vector<Item>>* _ITEMS;
         sqlite3* _DB;
 
         PrettyColors _COLORMANAGER;
@@ -49,7 +48,7 @@ class MenuManager
         #define KEY_BACKSPACE  8
 
     public:
-        MenuManager(bool& running, map<int, vector<Item>>& items);
+        MenuManager(bool& running);
         void printMenu();
         Item addItemMenu();
         void populateOtherItems(Item _item);
