@@ -15,11 +15,14 @@
 #include <cstdio>
 #include <conio.h> //windows key library. also need linux
 #include <iomanip>
+#include <filesystem>
+#include <fstream>
 
 
 #include "PrettyColors.h"
 #include "Item.h"
 #include "ActionValidator.h"
+#include "sqlite3.h"
 
 class MenuManager
 {
@@ -31,6 +34,7 @@ class MenuManager
 
         bool* _RUNNING;
         map<int, vector<Item>>* _ITEMS;
+        sqlite3* _DB;
 
         PrettyColors _COLORMANAGER;
         ActionValidator _VALIDATOR;
@@ -103,6 +107,8 @@ class MenuManager
 
             return local_time.tm_mday;
         }
-};
+        
+        ~MenuManager();
+    };
 
 #endif

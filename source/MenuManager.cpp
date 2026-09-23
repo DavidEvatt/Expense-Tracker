@@ -5,6 +5,15 @@ MenuManager::MenuManager(bool& running, map<int, vector<Item>>& items)
 {
     _RUNNING = &running;
     _ITEMS = &items;
+
+    //Attempt to open data base
+    int exit = sqlite3_open("Data/myDataBase.db", &_DB);
+
+    if (exit) {
+        std::cerr << "Error opening database: " << sqlite3_errmsg(_DB) << std::endl;
+    } else {
+        std::cout << "Opened database successfully!" << std::endl;
+    }
 };
 
 /**
@@ -60,6 +69,29 @@ void MenuManager::printMenu()
                 }
 
                 _ITEMS->clear();
+
+                //Create Table if it doesnt exist
+                char* errMsg = nullptr;
+                const char* createTableSQL = "CREATE TABLE IF NOT EXISTS items ("
+                                        "occurs TEXT, "
+                                        "month INTEGER, "
+                                        "day INTEGER, "
+                                        "amount DOUBLE, "
+                                        "inc INTEGER, "
+                                        "name TEXT, "
+                                        "year INTEGER);";
+
+                int rc = sqlite3_exec(_DB, createTableSQL, nullptr, nullptr, &errMsg);
+                if(rc != SQLITE_OK)
+                {
+                    std::cerr << "SQL error creating table: " << errMsg << std::endl;
+                    sqlite3_free(errMsg);
+                    sqlite3_close(_DB);
+                }
+
+                errMsg = nullptr;
+                createTableSQL = nullptr;
+
                 break;
             }
 
@@ -153,12 +185,8 @@ Item MenuManager::addItemMenu()
     Item newItem = Item(occurs, month, day, amount, inc, name, year);
     cout << _COLORMANAGER.GREEN << "Item added!\n" << _COLORMANAGER.CLEAR_FORMAT;
     _COLORMANAGER.pauseTerminal(1);
-
-    (*_ITEMS)[month].push_back(newItem);
-    //sorts the alogroithm by days after adding it in
-    std::sort((*_ITEMS)[month].begin(), (*_ITEMS)[month].end());
+    
     populateOtherItems(newItem);
-    cout << "Number of items: " << (*_ITEMS)[8].size() << "\n";
     return newItem;
 };
 
@@ -461,165 +489,201 @@ void MenuManager::monthyView(int _months)
 
 void MenuManager::populateOtherItems(Item _item)
 {
+    int numInstances = 0; //the number of instances we want to create
+    int timeChangeRate = 0; //how many (days / months / years) do we move forward at a time.
+    bool atEnd = false; // a varibale that tells us if we are at the end of a month or not.
+
     int curMonth = _item.getMonth();
     int curDay = _item.getDay();
     int curYear = year;
 
+    if(curDay == _VALIDATOR.getMaxDays(curMonth))
+    {
+        atEnd = true;
+    }
+
     if(_item.getOccurance() == "DAILY")
     {
-        for(int i = 0; i < 365; i++)
-        {
-            curDay++;
-            //check the ammount of days in our moth
-            int daysInMonth = _VALIDATOR.getMaxDays(curMonth);
-            if(curDay > daysInMonth)
-            {
-                //if my day im on is greater than the amount of days
-                //set curDay to 1 and move to the next month
-                curDay = 1;
-                curMonth++;
-
-                if(curMonth > 12)
-                {
-                    //if we go over twelve the fo back to 1 and increase the year by 1
-                    curMonth = 1;
-                    curYear++;
-                }
-            }
-
-            Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
-            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
-            //sorts the alogroithm by days after adding it in
-            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
-        }
+        numInstances = 365;
+        timeChangeRate = 1;
     }
 
     else if(_item.getOccurance() == "WEEKLY")
     {
-        // 52 weeks in a year
-        for(int i = 0; i < 52; i++)
-        {
-            curDay += 7;
-            int daysInMonth = _VALIDATOR.getMaxDays(curMonth);
-
-            if(curDay > daysInMonth)
-            {
-                curDay -= daysInMonth;
-                curMonth++;
-
-                if(curMonth > 12)
-                {
-                    curMonth = 1;
-                    curYear++;
-                }
-            }
-
-             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
-            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
-            //sorts the alogroithm by days after adding it in
-            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
-        }
+        numInstances = 52;
+        timeChangeRate = 7;
     }
 
     else if(_item.getOccurance() == "BIWEEKLY")
     {
-        // 26 bi weeks in a year
-        for(int i = 0; i < 26; i++)
+        numInstances = 26;
+        timeChangeRate = 14;
+    }
+
+    else if(_item.getOccurance() == "MONTHLY")
+    {
+        numInstances = 12;
+        timeChangeRate = _VALIDATOR.getMaxDays(_item.getMonth());
+    }
+    
+    else if(_item.getOccurance() == "QUARTERLY")
+    {
+        numInstances = 4;
+        timeChangeRate = 3; // months
+    }
+
+    else if(_item.getOccurance() == "SEMIANNUALLY")
+    {
+        numInstances = 2;
+        timeChangeRate = 6; //months
+    }
+
+    else if(_item.getOccurance() == "ANNUALLY")
+    {
+        numInstances = 2;
+        timeChangeRate = 1; //year
+    }
+
+    for(int i = 0; i < numInstances; i++)
+    {
+    //STEP ! | ADD THE ITEM
+        //Error message variable
+        char* errMsg = nullptr;
+        //using char* to prepare the data base to take in a statment to perform
+        sqlite3_exec(_DB, "BEGIN TRANSACTION;", nullptr, nullptr, &errMsg);
+        const char* sql = "INSERT INTO items (occurs, month, day, amount, inc, name, year) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        sqlite3_stmt* stmt;
+
+        //failure
+        if(sqlite3_prepare_v2(_DB, sql, -1, &stmt, nullptr) != SQLITE_OK)
         {
-            curDay += 14;
-            int daysInMonth = _VALIDATOR.getMaxDays(curMonth);
+            std::cerr << "Prepare Failed: " << sqlite3_errmsg(_DB) << "\n";
+            //close pointers to pervent memory leak
+            sqlite3_close(_DB);
+            sql = nullptr;
+            stmt = nullptr;
+            _DB = nullptr;
+            *_RUNNING = false; //kills the program
+        }
 
-            if(curDay > daysInMonth)
+        //the item jsut created
+        Item objectToBind = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+
+        //taking tge value and assigning it to the sql variable. They start at 0 not 1 from some odd reason
+        sqlite3_bind_text(stmt, 1, objectToBind.getOccurance().c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 2, objectToBind.getMonth());
+        sqlite3_bind_int(stmt, 3, objectToBind.getDay());
+        sqlite3_bind_double(stmt, 4, objectToBind.getAmt());
+        sqlite3_bind_int(stmt, 5, objectToBind.getInc()); // returns 0 or 1
+        sqlite3_bind_text(stmt, 6, objectToBind.getName().c_str(), -1, SQLITE_TRANSIENT);
+        sqlite3_bind_int(stmt, 7, objectToBind.getYear());
+
+        //execute the stmt variable
+        sqlite3_step(stmt);
+
+        //reset it back to being empty
+        sqlite3_reset(stmt);
+
+        //finalize the thing (not 100% sure what this even does
+        sqlite3_finalize(stmt);
+
+        //Update the data base
+        sqlite3_exec(_DB, "COMMIT;", nullptr, nullptr, &errMsg);
+
+        //prevent memory leaks
+        sql = nullptr;
+        stmt = nullptr;
+        errMsg = nullptr;
+
+    //STEP 2 | USE DAYCHANGE VARIABLE
+        if(_item.getOccurance() == "MONTHLY")
+        {
+            curDay += timeChangeRate;
+            if(curDay > _VALIDATOR.getMaxDays(curMonth))
             {
-                curDay -= daysInMonth;
+                // this should always return a minimum value of 1 and 
+                // should always show how many days we are into the next month
+                curDay -= _VALIDATOR.getMaxDays(curMonth);
                 curMonth++;
+                
+                //after we increase our month we check if we are at the end of the year
+                if(curMonth > 12)
+                {
+                    curMonth = 1;
+                    curYear++;
+                }
 
+                timeChangeRate = _VALIDATOR.getMaxDays(curMonth);
+            }
+        }
+
+        else if(_item.getOccurance() == "QUARTERLY")
+        {
+            curMonth += timeChangeRate;
+            if(curMonth > 12)
+            {
+                curMonth -= 12;
+                curYear++;
+            }
+
+            if(atEnd)
+            {
+                if(curDay != _VALIDATOR.getMaxDays(curMonth))
+                {
+                    curDay = _VALIDATOR.getMaxDays(curMonth);
+                }
+            }
+        }
+
+        else if( _item.getOccurance() == "SEMIANNUAL")
+        {
+            curMonth += timeChangeRate;
+            if(curMonth > 12)
+            {
+                curMonth -= 12;
+                curYear++;
+            }
+
+            if(atEnd)
+            {
+                if(curDay != _VALIDATOR.getMaxDays(curMonth))
+                {
+                    curDay = _VALIDATOR.getMaxDays(curMonth);
+                }
+            }
+        }
+
+        else if( _item.getOccurance() == "ANNUALLY")
+        {
+            curYear += timeChangeRate;
+        }
+
+        else
+        {
+            curDay += timeChangeRate;
+            if(curDay > _VALIDATOR.getMaxDays(curMonth))
+            {
+                // this should always return a minimum value of 1 and 
+                // should always show how many days we are into the next month
+                curDay -= _VALIDATOR.getMaxDays(curMonth);
+                curMonth++;
+                
+                //after we increase our month we check if we are at the end of the year
                 if(curMonth > 12)
                 {
                     curMonth = 1;
                     curYear++;
                 }
             }
-
-             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
-            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
-            //sorts the alogroithm by days after adding it in
-            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
         }
+        
+
+    //STEP 3 | CELEBRATE IF IT WORKS
     }
-
-    else if(_item.getOccurance() == "MONTHLY")
-    {
-        // 12 months in a year
-        for(int i = 0; i < 12; i++)
-        {
-            curMonth++;
-
-            if(curMonth > 12)
-            {
-                curMonth = 1;
-                curYear++;
-            }
-            
-
-             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
-            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
-            //sorts the alogroithm by days after adding it in
-            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
-        }
-    }
-    
-    else if(_item.getOccurance() == "QUARTERLY")
-    {
-        //4 quarters in a year
-        for(int i = 0; i < 4; i++)
-        {
-            curMonth += 3;
-
-            if(curMonth > 12)
-            {
-                curMonth -= 12;
-                curYear++;
-            }
-            
-
-             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
-            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
-            //sorts the alogroithm by days after adding it in
-            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
-        }
-    }
-
-    else if(_item.getOccurance() == "SEMIANNUALLY")
-    {
-        //2 Halfs in a year
-        for(int i = 0; i < 2; i++)
-        {
-            curMonth += 6;
-
-            if(curMonth > 12)
-            {
-                curMonth -= 12;
-                curYear++;
-            }
-            
-
-             Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
-            (*_ITEMS)[newItem.getMonth()].push_back(newItem);
-            //sorts the alogroithm by days after adding it in
-            std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
-        }
-    }
-
-    else if(_item.getOccurance() == "ANNUALLY")
-    {
-        curYear++;
-            
-        Item newItem = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
-        (*_ITEMS)[newItem.getMonth()].push_back(newItem);
-        //sorts the alogroithm by days after adding it in
-        std::sort((*_ITEMS)[newItem.getMonth()].begin(), (*_ITEMS)[newItem.getMonth()].end());
-    }
-
-    
 };
+
+MenuManager::~MenuManager()
+{ 
+    sqlite3_close(_DB);
+    _DB = nullptr;
+}

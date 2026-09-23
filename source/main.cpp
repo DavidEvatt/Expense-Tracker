@@ -130,6 +130,7 @@ int main()
     */
    
     sqlite3_close(db);
+    db = nullptr;
 
     cout << "Exiting program...\n";
     _COLORMANAGER.pauseTerminal(1);
