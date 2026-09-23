@@ -169,15 +169,7 @@ The application follows a simple separation-of-responsibilities approach.
                  └─────────────────┘
 ```
 
-Transactions are loaded from SQLite into an in-memory:
-
-```cpp
-std::map<int, std::vector<Item>>
-```
-
-where the map key represents the month and each month's vector contains its transactions.
-
-Transactions are sorted after being loaded so they can be displayed chronologically.
+Transactions are pulled straight from the data base.
 
 ## Current Status
 
@@ -187,7 +179,6 @@ The current focus is building a solid foundation for a larger personal finance a
 
 - Reliable transaction management
 - Persistent database storage
-- Better input validation
 - Improved budgeting functionality
 - Cleaner application architecture
 - Future expansion toward a more complete personal finance system
@@ -205,11 +196,12 @@ Some planned improvements include:
 - [ ] Linux support
 - [ ] Improved command-line interface
 - [ ] Export/import functionality
+- [ ] Some kind of User Interface
 
 ## Why I Built This
 
 I built this project to have a way to breakdown my budget. I use a google sheets but my visibility is limited.
-I am planning on making a full switch to this application so it keeps recieving QOL and UI Updates.
+I am planning on using this application personally so that is keeps receiving quality of life and UI Updates.
 
 ## Author
 
