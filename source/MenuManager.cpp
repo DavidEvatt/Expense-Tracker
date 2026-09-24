@@ -417,6 +417,9 @@ void MenuManager::monthyView(int _months)
         sqlite3_finalize(stmt);
     //END SECTION
 
+        //sorts the items after pulling from the database
+        std::sort(listOfWeek.begin(), listOfWeek.end());
+
         //print all of the events out
         for(size_t i = 0; i < listOfWeek.size(); i++)
         {
@@ -516,7 +519,7 @@ void MenuManager::monthyView(int _months)
  */
 void MenuManager::populateOtherItems(Item _item)
 {
-    int numInstances = 0; //the number of instances we want to create
+    int numInstances = 1; //the number of instances we want to create
     int timeChangeRate = 0; //how many (days / months / years) do we move forward at a time.
     bool atEnd = false; // a varibale that tells us if we are at the end of a month or not.
 
@@ -594,7 +597,7 @@ void MenuManager::populateOtherItems(Item _item)
         }
 
         //the item jsut created
-        Item objectToBind = Item(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
+        Item objectToBind(_item.getOccurance(), curMonth, curDay, _item.getAmt(), _item.getInc(), _item.getName(), curYear);
 
         //taking tge value and assigning it to the sql variable. They start at 0 not 1 from some odd reason
         sqlite3_bind_text(stmt, 1, objectToBind.getOccurance().c_str(), -1, SQLITE_TRANSIENT);
@@ -641,6 +644,14 @@ void MenuManager::populateOtherItems(Item _item)
                 }
 
                 timeChangeRate = _VALIDATOR.getMaxDays(curMonth);
+            }
+
+            if(atEnd)
+            {
+                if(curDay != _VALIDATOR.getMaxDays(curMonth))
+                {
+                    curDay = _VALIDATOR.getMaxDays(curMonth);
+                }
             }
         }
 

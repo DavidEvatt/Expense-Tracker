@@ -44,6 +44,7 @@ int main()
 {
     if(!loadStats())
     {
+        //add database creation to this as well
         //either file was not created or there was no data in the file
         firstTimeUser();
         saveUser();
