@@ -14,7 +14,8 @@ class Item
         int month;
         string itemName;
         int year;
-        bool inc;
+        bool inc; //will later be an int or enum most likely
+        int uuid; //a unique id so that i can grab specific items from the table, modify them and send them back in.
     public:
         enum OCCURANCE
         {
@@ -30,7 +31,7 @@ class Item
     
 
         Item(string _occurs, int _month, int _day, double _amount, bool _inc, string _name, int _year);
-
+        Item(Item& newItem);
     
         void setOccurance(string _occurs);
         void setAmt(double _amount, bool _inc);
@@ -50,6 +51,7 @@ class Item
         //Operators
         friend std::ostream& operator<<(std::ostream& os, const Item& _item);
         friend bool operator<(const Item& lhs, const Item& rhs);
+        Item& operator=(const Item& rhs);
 };
 
 

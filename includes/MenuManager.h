@@ -54,22 +54,6 @@ class MenuManager
         void populateOtherItems(Item _item);
         void selectViewMonths();
         void monthyView(int _months);
-            /*  
-                Splits into
-                1. View by 1 Month
-                2. View by 3 Month
-                4. View by 6 Months
-                5. View by Year
-
-                each view should be seen by weeks and from their you can
-                press enter on a week to open it into a daily view.
-            */
-           /*
-           void viewByWeek(int _month, int _day);
-           void viewByMonth(int _month);
-           void viewByThreeMonths(int _month);
-           void viewBySixMonths(int _month);
-           void viewByYear(int _month);*/
 
         int getYear(){return year;};
 

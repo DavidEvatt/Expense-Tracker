@@ -86,6 +86,8 @@ Item::Item(string _occurs, int _month, int _day, double _amount, bool _inc, stri
     itemName = _name;
     year = _year;
     inc = _inc;
+
+    
 };
 
 /**
@@ -242,3 +244,32 @@ bool operator<(const Item& lhs, const Item& rhs)
     return lhs.getDay() < rhs.getDay();
 }
 
+/**
+ * @brief Copy Assignment
+ */
+Item& Item::operator=(const Item& rhs)
+{
+    amount = rhs.amount;
+    occurs = rhs.occurs;
+    dayOfWeek = rhs.dayOfWeek;
+    month = rhs.month;
+    itemName = rhs.itemName;
+    year = rhs.year;
+    inc = rhs.inc;
+
+    return *this;
+}
+
+/**
+ * @brief Copy Constructor
+ */
+Item::Item(Item& newItem)
+{
+    amount = newItem.amount;
+    occurs = newItem.occurs;
+    dayOfWeek = newItem.dayOfWeek;
+    month = newItem.month;
+    itemName = newItem.itemName;
+    year = newItem.year;
+    inc = newItem.inc;
+}
